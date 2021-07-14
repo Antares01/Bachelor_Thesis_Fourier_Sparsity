@@ -51,47 +51,79 @@ namespace Petter
 		std::ifstream fin(filename.c_str());
 		ASSERT_STR(fin,"Could not open file");
 
-		int n,i,j,k,l;
+		int entries,i,j,k,l,m,n,o;;
 		real a;
-		fin >> n;
-		for (i=0;i<n;++i) {
+		fin >> entries;
+		for (i=0;i<entries;++i) {
 			fin >> a;
 			add_monomial(i, a);
 		}
 		ASSERT_STR(fin,"Could not read degree 1 monomials");
-		fin >> n;
+		fin >> entries;
 		if (!fin) {
 			return;
 		}
-		for (int c=1;c<=n;++c) {
+		for (int c=1;c<=entries;++c) {
 			fin >> i >> j;
 			i--; j--;
 			fin >> a;
 			add_monomial(i,j,a);
 		}
 		ASSERT_STR(fin,"Could not read degree 2 monomials");
-		fin >> n;
+		fin >> entries;
 		if (!fin) {
 			return;
 		}
-		for (int c=1;c<=n;++c) {
+		for (int c=1;c<=entries;++c) {
 			fin >> i >> j >> k;
 			i--; j--; k--;
 			fin >> a;
 			add_monomial(i,j,k,a);
 		}
 		ASSERT_STR(fin,"Could not read degree 3 monomials");
-		fin >> n;
+		fin >> entries;
 		if (!fin) {
 			return;
 		}
-		for (int c=1;c<=n;++c) {
+		for (int c=1;c<=entries;++c) {
 			fin >> i >> j >> k >> l; 
 			i--; j--; k--; l--;
 			fin >> a;
 			add_monomial(i,j,k,l,a);
 		}
 		ASSERT_STR(fin,"Could not read degree 4 monomials");
+		fin >> entries;
+		if (!fin) {
+			return;
+		}
+		for (int c=1;c<=entries;++c) {
+			fin >> i >> j >> k >> l >> m; 
+			fin >> a;
+			add_monomial(i,j,k,l,m,a);
+		}
+		ASSERT_STR(fin,"Could not read degree 5 monomials");
+		fin >> entries;
+		if (!fin) {
+			return;
+		}
+		for (int c=1;c<=entries;++c) {
+			fin >> i >> j >> k >> l >> m >> n; 
+	
+			fin >> a;
+			add_monomial(i,j,k,l,m,n,a);
+		}
+		ASSERT_STR(fin,"Could not read degree 6 monomials");
+		fin >> entries;
+		if (!fin) {
+			return;
+		}
+		for (int c=1;c<=entries;++c) {
+			fin >> i >> j >> k >> l >> m >> n >> o; 
+			
+			fin >> a;
+			add_monomial(i,j,k,l,m,n,o,a);
+		}
+		ASSERT_STR(fin,"Could not read degree 7 monomials");
 	}
 	
 	template<typename real>
@@ -425,6 +457,51 @@ namespace Petter
 		//return std::make_tuple<int,int,int,int>(i,j,k,l);
 	}
 
+	quin make_quin(int i, int j, int k, int l, int m){
+		//
+		// enforce i< j < k < l < m
+		// 
+		vector<int> values(5);
+		values[0] = i;
+		values[1] = j;
+		values[2] = k;
+		values[3] = l;
+		values[4] = m;
+		std::sort(values.begin(), values.end());
+		i = values[0];
+		j = values[1];
+		k = values[2];
+		l = values[3];
+		m = values[4];
+		ASSERT(i<j && j<k && k<l && l<m);
+		return std::make_pair(make_pair(i,j),make_triple(k,l,m));
+	}
+
+	six make_six (int i, int j, int k, int l, int m, int n){
+		vector<int> values(6);
+		values[0] = i;
+		values[1] = j;
+		values[2] = k;
+		values[3] = l;
+		values[4] = m;
+		values[5] = n;
+		std::sort(values.begin(), values.end());
+		return std::make_pair(make_triple(values[0],values[1],values[2]), make_triple(values[3],values[4],values[5]));
+	}
+
+	sep make_sep (int i, int j, int k, int l, int m, int n, int o){
+		vector<int> values(7);
+		values[0] = i;
+		values[1] = j;
+		values[2] = k;
+		values[3] = l;
+		values[4] = m;
+		values[5] = n;
+		values[6] = o;
+		std::sort(values.begin(), values.end());
+		return std::make_pair(make_triple(values[0],values[1],values[2]), make_quad(values[3],values[4],values[5], values[6]));
+	}
+
 	int get_i(const pair& p)
 	{
 		return p.first;
@@ -506,6 +583,48 @@ namespace Petter
 		add_monomial(j,k,l, 0);
 	}
 
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, int m, real a)
+	{
+		ASSERT(0<=i && 0<=j && 0<=k && 0<=l && 0<=m);
+		aijklm[ make_quin(i,j,k,l, m) ] += a;
+		//It is important to also add the lower order monomials
+		add_monomial(i,j,k, l, 0);
+		add_monomial(i,j,k, m, 0);
+		add_monomial(i,j,l, m, 0);
+		add_monomial(i,k,l,m, 0);
+		add_monomial(j,k,l,m, 0);
+	}
+
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, int m, int n, real a)
+	{
+		ASSERT(0<=i && 0<=j && 0<=k && 0<=l && 0<=m && 0<=n);
+		aijklmn[ make_six(i,j,k,l, m, n) ] += a;
+		//It is important to also add the lower order monomials
+
+		add_monomial(i,j,k, l, m,  0);
+		add_monomial(i,j,k, l,  n,  0);
+		add_monomial(i,j,k,  m, n,  0);
+		add_monomial(i,j, l, m, n,  0);
+		add_monomial(i,k, l, m, n,  0);
+		add_monomial(j,k, l, m, n,  0);
+	}
+
+	template<typename real>
+	void PseudoBoolean<real>::add_monomial(int i, int j, int k, int l, int m, int n, int o, real a)
+	{
+		ASSERT(0<=i && 0<=j && 0<=k && 0<=l && 0<=m && 0<=n && 0<=o);
+		aijklmno[ make_sep(i,j,k,l, m, n, o) ] += a;
+		//It is important to also add the lower order monomials
+		add_monomial(i,j,k,l,m,n, 0);
+		add_monomial(i,j,k,l,m,o, 0);
+		add_monomial(i,j,k,l,n,o, 0);
+		add_monomial(i,j,k,m,n,o, 0);
+		add_monomial(i,j,l,m,n,o, 0);
+		add_monomial(i,k,l,m,n,o, 0);
+		add_monomial(j,k,l,m,n,o, 0);
+	}
 	//
 	// Order-1 clique
 	//

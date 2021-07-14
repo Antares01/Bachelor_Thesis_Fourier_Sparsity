@@ -70,6 +70,13 @@ namespace Petter
 	typedef std::pair<int, std::pair<int,int> > triple;
 	/// A 4-tuple of indices
 	typedef std::pair<std::pair<int,int>, std::pair<int,int> > quad;
+	/// A 5-tuple of indices
+	typedef std::pair<pair, triple> quin;
+	/// A 6-tuple of indices
+	typedef std::pair<triple, triple> six;
+	/// A 7-tuple of indices
+	typedef std::pair<triple, quad> sep;
+
 
 	// Indexing maps with tuples doesn't work very well in VC++ (known bug)
 	// otherwise, the following typedefs would have been nice:
@@ -82,16 +89,25 @@ namespace Petter
 	triple make_triple(int i, int j, int k);
 	/// Creates a quadruple from four indices
 	quad make_quad(int i, int j, int k, int l);
+	/// Creates a quintuple from five indices
+	quin make_quin(int i, int j, int k, int l, int m);
+	/// Creates a sixtuple from six indices
+	six make_six(int i, int j, int k, int l, int m, int n);
+	/// Creates a septuple from seven indices
+	sep make_sep(int i, int j, int k, int l, int m, int n, int o);
+
 	/// Retrieves the first index
 	int get_i(const pair& p);
 	/// Retrieves the second index
 	int get_j(const pair& p);
+
 	/// Retrieves the first index
 	int get_i(const triple& t);
 	/// Retrieves the second index
 	int get_j(const triple& t);
 	/// Retrieves the third index
 	int get_k(const triple& t);
+
 	/// Retrieves the first index
 	int get_i(const quad& q);
 	/// Retrieves the second index
@@ -100,6 +116,45 @@ namespace Petter
 	int get_k(const quad& q);
 	/// Retrieves the fourth index
 	int get_l(const quad& q);
+
+	/// Retrieves the first index
+	int get_i(const quin& q);
+	/// Retrieves the second index
+	int get_j(const quin& q);
+	/// Retrieves the third index
+	int get_k(const quin& q);
+	/// Retrieves the fourth index
+	int get_l(const quin& q);
+	/// Retrieves the fifth index
+	int get_m(const quin& q);
+
+	/// Retrieves the first index
+	int get_i(const six& q);
+	/// Retrieves the second index
+	int get_j(const six& q);
+	/// Retrieves the third index
+	int get_k(const six& q);
+	/// Retrieves the fourth index
+	int get_l(const six& q);
+	/// Retrieves the fifth index
+	int get_m(const six& q);
+	/// Retrieves the sixth index
+	int get_n(const six& q);
+
+	/// Retrieves the first index
+	int get_i(const sep& q);
+	/// Retrieves the second index
+	int get_j(const sep& q);
+	/// Retrieves the third index
+	int get_k(const sep& q);
+	/// Retrieves the fourth index
+	int get_l(const sep& q);
+	/// Retrieves the fifth index
+	int get_m(const sep& q);
+	/// Retrieves the sixth index
+	int get_n(const sep& q);
+	/// Retrieves the seventh index
+	int get_o(const sep& q);
 
 	template<typename real>
 	class SymmetricPseudoBoolean;
@@ -147,6 +202,13 @@ namespace Petter
 		void add_monomial(int i, int j, int k, real a);
         /// Adds a monomial of degree 4 to the function
 		void add_monomial(int i, int j, int k, int l, real a);
+		/// Adds a monomial of degree 5 to the function
+		void add_monomial(int i, int j, int k, int l, int m, real a);
+		/// Adds a monomial of degree 6 to the function
+		void add_monomial(int i, int j, int k, int l, int m, int n, real a);
+		/// Adds a monomial of degree 7 to the function
+		void add_monomial(int i, int j, int k, int l, int m, int n, int o, real a);
+
 
 		/// Adds a clique of a single variable to the function
 		void add_clique(int i, real E0, real E1);
@@ -222,6 +284,13 @@ namespace Petter
 		map<triple, real> aijk; 
 		/// Degree-4 terms
 		map<quad  , real> aijkl; 
+		/// Degree-5 terms
+		map<quin  , real> aijklm;
+		/// Degree-6 terms
+		map<six  , real> aijklmn;
+		/// Degree-7 terms
+		map<sep  , real> aijklmno;
+
 	};
 
 	template<typename real>
