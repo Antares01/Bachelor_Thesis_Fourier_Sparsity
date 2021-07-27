@@ -68,16 +68,13 @@ T absolute(const T t)
 void print_x(const std::vector<label>& x)
 {
 	size_t n = x.size();
-	for (size_t i=0;i<n&&i<20;++i) {
+	for (size_t i=0;i<n;++i) {
 		if (x[i]>=0) {
 			cout << x[i];
 		}
 		else {
 			cout << '-';
 		}
-	}
-	if (n>20) {
-		cout << " ... ";
 	}
 }
 
@@ -193,6 +190,14 @@ void test_branchandbound(const PseudoBoolean<real>& pb,
 	fout << setw(10) << left << str(method) <<  bbinfo.iterations
 	     << " iterations, total_time = " << bbinfo.total_time
 	     << " s, solver_time = " << bbinfo.solver_time << endl;
+	
+	int flipped = 0;
+	for (size_t i = 0; i < n; i++)
+	{
+		if(x[i] > 0)
+			flipped++;
+	}
+	cout << endl << "Overall there are " << flipped << " nonzero entries" << endl;
 
   if (!isequal(val, pb.eval(x))) {
 		throw runtime_error("Branch and bound value inconsistent");
