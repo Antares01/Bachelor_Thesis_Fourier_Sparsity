@@ -233,6 +233,10 @@ namespace Petter
 		/// Reduce the function given a partial labeling
 		void reduce(const vector<label>& x);
 
+		/// Return total energy of a given feature, 
+		/// i.e. sum of the squares of the amplitudes whose frequency contains that feature
+		real energy_of_feature(int feature_index) const;
+
 		/// \private
 		real minimize_reduction(vector<label>& x) const;
         /// \private

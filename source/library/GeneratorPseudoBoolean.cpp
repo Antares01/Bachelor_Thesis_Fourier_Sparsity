@@ -73,7 +73,7 @@ namespace Petter
 	Generators<real>::Generators(const string& filename)
 	{
 		ifstream fin(filename);
-
+		//cout << filename ;
 		fin >> ngen2 >> ngen3 >> ngen4pos;
 		ASSERT_STR(fin, "Could not read file");
 

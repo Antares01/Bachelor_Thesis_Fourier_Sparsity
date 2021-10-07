@@ -787,6 +787,53 @@ namespace Petter
 
 
 
+	//
+	// Compute energy of a feature
+	//
+	template<typename real>
+	real PseudoBoolean<real>::energy_of_feature(int feature_index) const
+	{
+		real energy = 0;
+		// iterate over degree one monomials
+		for (auto const& key_value_pair : ai){
+			auto i = key_value_pair.first;
+			auto val = key_value_pair.second;
+			if( i == feature_index){
+				energy += val*val;
+			}
+		}
+
+		//iterate over degree two monomials
+		for(auto const& key_value_pair : aij){
+			auto p = key_value_pair.first;
+			auto val = key_value_pair.second;
+			if(p.first == feature_index || p.second == feature_index){
+				energy += val*val;
+			}
+		}
+
+		//iterate over degree three monomials
+		for(auto const& key_value_pair :  aijk){
+			triple t = key_value_pair.first;
+			auto val = key_value_pair.second;
+			if(get_i(t) == feature_index || get_j(t) == feature_index || get_k(t) == feature_index ){
+				energy += val*val;
+			}
+		}
+
+		//iterate over degree four monomials
+		for(auto const& key_value_pair :  aijkl){
+			quad t = key_value_pair.first;
+			auto val = key_value_pair.second;
+			if(get_i(t) == feature_index || get_j(t) == feature_index || get_k(t) == feature_index || get_l(t) == feature_index){
+				energy += val*val;
+			}
+		}
+
+		return energy;
+	}
+
+
 	template<typename real>
 	SymmetricPseudoBoolean<real>::SymmetricPseudoBoolean()
 	{

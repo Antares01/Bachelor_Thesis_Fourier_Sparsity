@@ -190,14 +190,23 @@ void test_branchandbound(const PseudoBoolean<real>& pb,
 	fout << setw(10) << left << str(method) <<  bbinfo.iterations
 	     << " iterations, total_time = " << bbinfo.total_time
 	     << " s, solver_time = " << bbinfo.solver_time << endl;
+
+	ofstream MyFile;
+	MyFile.open("/home/mezmik/Documents/thesis/experiments/learning_decision_trees/obj/branch_and_bound_files/solution_vector.txt", ofstream::out | ofstream::trunc);
 	
 	int flipped = 0;
 	for (size_t i = 0; i < n; i++)
 	{
+		// Write to the file
+  		MyFile << x[i] << " ";
 		if(x[i] > 0)
 			flipped++;
 	}
 	cout << endl << "Overall there are " << flipped << " nonzero entries" << endl;
+
+
+  	// Close the file
+  	MyFile.close();
 
   if (!isequal(val, pb.eval(x))) {
 		throw runtime_error("Branch and bound value inconsistent");

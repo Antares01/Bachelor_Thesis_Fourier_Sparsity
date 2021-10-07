@@ -14,6 +14,7 @@
 #include <queue>
 #include <cmath>
 #include <cstdio>
+#include <algorithm>
 using namespace std;
 
 // From main program
@@ -313,7 +314,7 @@ namespace Petter
 		const bool verbose = false;
 
 		// if in some branch we have more than this number of ones then we stop 
-		int regularizer = 5;
+		int regularizer = 10;
 
 		size_t n = x.size();
 
@@ -336,6 +337,12 @@ namespace Petter
 		int    nprints = 0;
 
 		start();
+		vector<std::pair<real, int>> energies(n);
+		for (size_t i=0;i<x.size();++i) {
+			energies[i].first = f.energy_of_feature(i);
+			energies[i].second = i;
+		}
+		std::sort(energies.begin(), energies.end());
 		while (!problems.empty()) {
 			total_time += stop(); 
 			
@@ -514,8 +521,9 @@ namespace Petter
 				Subproblem<real> problem2 = problem;
 
 				// Go through all variables
-				for (size_t i=0;i<n;++i) {
+				for (size_t j= n - 1;j>= 0;--j) {
 					// Look for a variable which isn't fixed for this problem
+					int i = energies[j].second;
 					if (problem.fixed[i] < 0) {
 
 						// Branch into two problems for this variable
